@@ -1,7 +1,4 @@
-package huffman_code;
-
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
+package huffman_code.coding;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;

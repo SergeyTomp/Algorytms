@@ -1,17 +1,17 @@
 package huffman_code;
 
-import java.util.*;
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 
-public class HuffmanTree {
+import java.util.Comparator;
+import java.util.PriorityQueue;
+import java.util.Scanner;
 
-    private Node root;
+public class Main {
 
-    public HuffmanTree() {
-    }
-
-    public HuffmanTree(Node root) {
-        this.root = root;
-    }
+    private int[] frequencies;
+    private String [] codeTable;
+    private int count;
 
     private class Node{
 
@@ -21,10 +21,10 @@ public class HuffmanTree {
         Node rightChild;
         Node parent;
 
-        public Node(HuffmanTree leftChild, HuffmanTree rightChild) {
-            this.frequency = leftChild.root.frequency + rightChild.root.frequency;
-            this.leftChild = leftChild.root;
-            this.rightChild = rightChild.root;
+        Node(Node leftChild, Node rightChild) {
+            this.frequency = leftChild.frequency + rightChild.frequency;
+            this.leftChild = leftChild;
+            this.rightChild = rightChild;
 //            if (leftChild.root.frequency <= rightChild.root.frequency) {
 //                this.leftChild = leftChild.root;
 //                this.rightChild = rightChild.root;
@@ -34,29 +34,30 @@ public class HuffmanTree {
 //            }
         }
 
-        public Node(int frequency, Character character) {
+        Node(int frequency, Character character) {
             this.frequency = frequency;
             this.character = character;
         }
     }
+    @SuppressWarnings(value = "nls")
+    private Node buildHuffmanTree(int[] frequencies) {
 
-    private HuffmanTree buildHuffmanTree(int[] frequencies) {
-
-        PriorityQueue<HuffmanTree> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(o -> o.root.frequency));
+        PriorityQueue<Node> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(o -> o.frequency));
 
         for (int i = 0; i < frequencies.length; i++) {
             if (frequencies[i] != 0) {
-                priorityQueue.offer(new HuffmanTree(new Node(frequencies[i], (char)i)));
+                priorityQueue.offer(new Node(frequencies[i], (char)i));
+                count += 1;
             }
         }
 
         while (priorityQueue.size() > 1) {
 
-            HuffmanTree t1 = priorityQueue.poll();
-            HuffmanTree t2 = priorityQueue.poll();
-            HuffmanTree temp = new HuffmanTree(new Node(t1, t2));
-            temp.root.leftChild.parent = temp.root;
-            temp.root.rightChild.parent = temp.root;
+            Node t1 = priorityQueue.poll();
+            Node t2 = priorityQueue.poll();
+            Node temp = new Node(t1, t2);
+            temp.leftChild.parent = temp;
+            temp.rightChild.parent = temp;
             priorityQueue.offer(temp);
         }
 
@@ -65,9 +66,9 @@ public class HuffmanTree {
 
     private String encode(String text) {
 
-        int[] frequencies = new int[256];
+        frequencies = new int[256];
         text.chars().mapToObj(c -> (char)c).forEach(c -> frequencies[c] = frequencies[c] + 1);
-        HuffmanTree huffmanTree = buildHuffmanTree(frequencies);
+        Node huffmanTree = buildHuffmanTree(frequencies);
         String[] codeTable = makeCodeTable(huffmanTree);
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < text.length(); i++) {
@@ -76,12 +77,10 @@ public class HuffmanTree {
         return result.toString();
     }
 
-    private String [] makeCodeTable(HuffmanTree huffmanTree) {
+    private String [] makeCodeTable(Node huffmanTree) {
 
-        String [] codeTable = new String[256];
-
-        makeCodeTable(huffmanTree.root, new StringBuilder(), codeTable);
-
+        codeTable = new String[256];
+        makeCodeTable(huffmanTree, new StringBuilder(), codeTable);
         return codeTable;
     }
 
@@ -102,13 +101,19 @@ public class HuffmanTree {
 
     private void run(String text) {
         String encodedText = encode(text);
-        System.err.println(encodedText);
+        System.out.println(count + " " + encodedText.length());
+        for (int i = 0; i < codeTable.length; i++) {
+            if (codeTable[i] != null) {
+                System.out.println((char)i + ": " + codeTable[i]);
+            }
+        }
+        System.out.println(encodedText);
     }
 
     public static void main(String[] args) {
 
         Scanner s = new Scanner(System.in);
-        new HuffmanTree().run(s.next());
+        new Main().run(s.next());
         s.close();
     }
 }

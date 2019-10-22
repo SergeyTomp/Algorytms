@@ -39,17 +39,14 @@ public class Main {
         pq.offer(new Line(line[0], line[1]));
     }
 
-    private void run() throws IOException {
+    private void run() {
 
         int qty;
-        int length;
-        String[] pair = new String[2];
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
             String s1 = br.readLine();
             String[] header = s1.split(" ");
             qty = Integer.parseInt(header[0]);
-            length = Integer.parseInt(header[1]);
             pq = new PriorityQueue<>(qty);
 
             for (int i = 0; i < qty; i++) {
@@ -57,13 +54,17 @@ public class Main {
             }
             encodedLine = br.readLine();
             while (pq.size() > 0) {
-                System.err.println(pq.poll());
+
+                Line poll = pq.poll();
+                encodedLine = encodedLine.replaceAll(poll.code, poll.ch);
             }
             System.err.println(encodedLine);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args){
             new Main().run();
     }
 }

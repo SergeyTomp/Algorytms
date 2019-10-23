@@ -3,65 +3,48 @@ package huffman_code.decoding;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.PriorityQueue;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
 
-    private PriorityQueue<Line> pq;
     private String encodedLine;
-
-    private class Line implements Comparable<Line>{
-
-        String ch;
-        String code;
-
-        Line(String ch, String code) {
-            this.ch = ch;
-            this.code = code;
-        }
-
-        @Override
-        public String toString() {
-            return "Line{" +
-                    "ch='" + ch + '\'' +
-                    ", code='" + code + '\'' +
-                    '}';
-        }
-
-        @Override
-        public int compareTo(Line line) {
-            return line.code.compareTo(this.code);
-        }
-    }
-
-    private void fillQueue(String[] line) {
-
-        pq.offer(new Line(line[0], line[1]));
-    }
+    int qty;
+    int length;
+    Map<String,String> codeTable;
+    String[] lines;
+    String part;
+    StringBuilder result = new StringBuilder();
+    StringBuilder temp = new StringBuilder();
 
     private void run() {
 
-        int qty;
-
         try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
-            String s1 = br.readLine();
-            String[] header = s1.split(" ");
+
+            String[] header = br.readLine().split(" ");
             qty = Integer.parseInt(header[0]);
-            pq = new PriorityQueue<>(qty);
+            length = Integer.parseInt(header[1]);
+            codeTable = new HashMap<>(length);
 
             for (int i = 0; i < qty; i++) {
-                fillQueue(br.readLine().split(": "));
+                lines = br.readLine().split(": ");
+                codeTable.put(lines[1], lines[0]);
             }
-            encodedLine = br.readLine();
-            while (pq.size() > 0) {
 
-                Line poll = pq.poll();
-                encodedLine = encodedLine.replaceAll(poll.code, poll.ch);
+            encodedLine = br.readLine();
+
+            for (int i = 0; i < length; i++) {
+
+                temp.append(encodedLine.charAt(i));
+                if ((part = codeTable.get(temp.toString())) != null) {
+                    result.append(part);
+                    temp.setLength(0);
+                }
             }
-            System.err.println(encodedLine);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println(result.toString());
     }
 
     public static void main(String[] args){

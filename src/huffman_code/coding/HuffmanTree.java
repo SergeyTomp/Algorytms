@@ -7,12 +7,12 @@ import java.util.Scanner;
 
 public class HuffmanTree {
 
-    class Node implements Comparable<Node>{
+    private class Node implements Comparable<Node>{
 
         final int sum;
         String code;
 
-        public Node(int sum) {
+        Node(int sum) {
             this.sum = sum;
         }
 
@@ -26,12 +26,12 @@ public class HuffmanTree {
         }
     }
 
-    class Parent extends Node {
+    private class Parent extends Node {
 
         Node left;
         Node right;
 
-        public Parent(Node left, Node right) {
+        Parent(Node left, Node right) {
 
             super(left.sum + right.sum);
             this.left = left;
@@ -50,7 +50,7 @@ public class HuffmanTree {
 
         char symbol;
 
-        public Leaf(char symbol, int count) {
+        Leaf(char symbol, int count) {
             super(count);
             this.symbol = symbol;
         }

@@ -4,11 +4,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Formatter;
 
+/** Вариант с сотрировкой на месте, т.е. без создания временных массивов на каждом обороте рекурсии.
+ * Создаётся только дубль исходного массива на старте, результат в конце оказывается в исходном массиве.
+ * Расход памяти  O(n).
+ * На каждом обороте  рекурсии, начиная с первого вызова mergeSort, src и dst меняются местами.
+ * Фишка в том, что при возврате из рекурсии по наступлению базового случая
+ * сливаем в интервал массива две ранее слитых половинки, после чего этот интервал сам становится одной из половинок.
+ * Чтобы получить просто код сортировки слиянием, нужно раскомментировать строку вывода результатата сортировки.
+ * Для ускоренния работы можно раскомментировать блок обработки базового случая при размере элементарного массива равного 2,
+ * но расчёт инверий при этом будет врать*/
 public class Main {
 
-    private Integer count = 0;
+    private long count = 0;
 
     private void mergeSort(int[] src, int[] dst, int start, int end) {
 
@@ -52,8 +60,7 @@ public class Main {
             int[] src = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
             int[] dst = Arrays.copyOf(src, size);
             mergeSort(dst, src,0, size);
-            Arrays.stream(src).forEach(i -> System.out.print(i + " "));
-            System.out.println();
+//            Arrays.stream(src).forEach(i -> System.out.print(i + " "));
             System.out.println(count);
         } catch (IOException e) {
             e.printStackTrace();

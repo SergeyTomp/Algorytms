@@ -1,10 +1,14 @@
 package quickSort;
 
 import java.util.Arrays;
+import java.util.Objects;
+
+import static quickSort.QuickSort.Side.LEFT;
+import static quickSort.QuickSort.Side.RIGHT;
 
 public class QuickSort {
 
-    private enum Side {
+    enum Side {
         LEFT, RIGHT
     }
 
@@ -13,19 +17,35 @@ public class QuickSort {
         private Side side;
         private int x;
 
-        Point(int x) {
+        Point(int x, Side side) {
             this.x = x;
+            this.side = side;
         }
 
         @Override
         public int compareTo(Point o) {
+//            return this.x == o.x ? - o.side.compareTo(this.side) : this.x - o.x;
             return this.x - o.x;
         }
+
+//        @Override
+//        public String toString() {
+//            return side.name() + " " + x;
+//        }
 
         @Override
         public String toString() {
             return String.valueOf(x);
         }
+
+//        @Override
+//        public boolean equals(Object o) {
+//            if (this == o) return true;
+//            if (o == null || getClass() != o.getClass()) return false;
+//            Point point = (Point) o;
+//            return x == point.x &&
+//                    side == point.side;
+//        }
     }
 
     private void swap(Point[] array, int j, int i) {
@@ -39,7 +59,7 @@ public class QuickSort {
         Point base = array[left];
         int j = left;
         int k = left;
-        for (int i = left + 1; i <= right; i ++) {
+        for (int i = left + 1; i <= right; i++) {
             if (array[i].compareTo(base) < 0) {
                 j += 1;
                 swap(array, j, i);
@@ -49,8 +69,9 @@ public class QuickSort {
                 k += 1;
                 swap(array, k, i);
             }
-            swap(array, left, j);
         }
+        swap(array, left, j);
+        j--;
         return new int[]{j, k};
     }
 
@@ -85,8 +106,15 @@ public class QuickSort {
     }
 
     private void run() {
-        Point [] array = new Point[]{new Point(-1), new Point(4), new Point(2), new Point(3), new Point(4), new Point(5), new
-                Point(-1)};
+        Point [] array = new Point[]{
+                new Point(-1, LEFT),
+                new Point(4, LEFT),
+                new Point(2, LEFT),
+                new Point(3, LEFT),
+                new Point(4, RIGHT),
+                new Point(5, LEFT),
+                new Point(-1, LEFT),
+                new Point(-1, LEFT)};
         System.err.print(Arrays.toString(array));
         System.err.println();
         quickSort(array, 0, array.length - 1);

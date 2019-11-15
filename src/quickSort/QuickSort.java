@@ -3,12 +3,19 @@ package quickSort;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class QuickSort {
 
     enum Side {
-        LEFT, RIGHT
+
+        LEFT(1), TEST(0), RIGHT(-1);
+        int alter;
+
+        Side(int alter) {
+            this.alter = alter;
+        }
     }
 
     private class Point implements Comparable<Point> {
@@ -88,17 +95,31 @@ public class QuickSort {
         return count;
     }
 
+    private void search_2(Point [] array, Map<Point, Integer> testPointCounts) {
+
+        int count = 0;
+        for (Point p : array) {
+
+            if (p.side == Side.TEST) {
+
+                testPointCounts.put(p, count);
+            }
+            count += p.side.alter;
+        }
+    }
+
     private void run() {
 
         try(BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
 
+
             String[] qty = br.readLine().split(" ");
 
             final int linesQty = Integer.parseInt(qty[0]);
-            final Point[] linePoints = new Point[linesQty * 2];
-
             final int testPointsQty= Integer.parseInt(qty[1]);
-            final int[] testPoints = new int[testPointsQty];
+            StringBuilder sb = new StringBuilder(testPointsQty);
+            final Map<Point, Integer> testPointCounts = new LinkedHashMap<>(testPointsQty);
+            final Point[] linePoints = new Point[linesQty * 2 + testPointsQty];
 
             int linePointIndex = 0;
             for (int i = 0; i < linesQty; i++) {
@@ -112,18 +133,17 @@ public class QuickSort {
 
             String[] tp = br.readLine().split(" ");
 
-            for (int i = 0; i < testPoints.length; i++) {
-                testPoints[i] = Integer.parseInt(tp[i]);
+            for (int i = 0; i < testPointsQty; i++) {
+                linePoints[linePointIndex] = new Point(Integer.parseInt(tp[i]), Side.TEST);
+                testPointCounts.put(linePoints[linePointIndex], 0);
+                linePointIndex++;
             }
 
             quickSort(linePoints, 0, linePoints.length - 1);
+            search_2(linePoints, testPointCounts);
 
-
-
-            StringBuilder out = new StringBuilder();
-            Arrays.stream(testPoints).forEach(p -> out.append(search(linePoints, p)).append(" "));
-            System.out.println(out.toString());
-
+            testPointCounts.forEach((k,v) ->sb.append(v).append(" "));
+            System.out.println(sb.toString());
 
         } catch (IOException e) {
             e.printStackTrace();

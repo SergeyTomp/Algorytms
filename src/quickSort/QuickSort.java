@@ -49,10 +49,13 @@ public class QuickSort {
     }
 
     private void swap(Point[] array, int j, int i) {
-
+        System.err.println();
+        Arrays.stream(array).forEach(p -> System.err.print(p.x + " "));
         Point tmp = array[j];
         array[j] = array[i];
         array[i] = tmp;
+        System.err.println();
+        Arrays.stream(array).forEach(p -> System.err.print(p.x + " "));
     }
 
     private int[] partition_3(Point[] array, int left, int right) {
@@ -115,10 +118,13 @@ public class QuickSort {
                 new Point(5, LEFT),
                 new Point(-1, LEFT),
                 new Point(-1, LEFT)};
-        System.err.print(Arrays.toString(array));
+//        System.err.print(Arrays.toString(array));
+        Arrays.stream(array).forEach(p -> System.err.print(p.x + " "));
         System.err.println();
         quickSort(array, 0, array.length - 1);
-        System.err.print(Arrays.toString(array));
+//        System.err.print(Arrays.toString(array));
+        Arrays.stream(array).forEach(p -> System.err.print(p.x + " "));
+
     }
 
     public static void main(String[] args) {

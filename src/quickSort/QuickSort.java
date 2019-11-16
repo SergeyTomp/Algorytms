@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class QuickSort {
 
@@ -22,10 +23,12 @@ public class QuickSort {
 
         private Side side;
         private int x;
+        private int number;
 
-        Point(int x, Side side) {
+        Point(int x, Side side, int number) {
             this.x = x;
             this.side = side;
+            this.number = number;
         }
 
         @Override
@@ -46,6 +49,8 @@ public class QuickSort {
     }
 
     private int[] partition_3(Point[] array, int left, int right) {
+        int rand = (new Random().nextInt(right - left) + left);
+        swap(array, rand, left);
         Point base = array[left];
         int j = left;
         int k = left;
@@ -77,32 +82,18 @@ public class QuickSort {
         quickSort(array, m[1] + 1, right);
     }
 
-    private int search(Point [] array, int x) {
-        int count = 0;
-
-        for (Point p : array) {
-
-            if (p.x > x) {
-                return count;
-            }
-
-            if (p.side == Side.LEFT) {
-                count++;
-            } else if (p.x < x && p.side == Side.RIGHT) {
-                count--;
-            }
-        }
-        return count;
-    }
-
-    private void search_2(Point [] array, Map<Point, Integer> testPointCounts) {
+    private void search(Point [] array, Map<Point, Integer> testPointCounts) {
 
         int count = 0;
+        int last = testPointCounts.size();
         for (Point p : array) {
 
             if (p.side == Side.TEST) {
 
                 testPointCounts.put(p, count);
+            }
+            if (p.number == last) {
+                return;
             }
             count += p.side.alter;
         }
@@ -112,12 +103,11 @@ public class QuickSort {
 
         try(BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
 
-
             String[] qty = br.readLine().split(" ");
 
             final int linesQty = Integer.parseInt(qty[0]);
             final int testPointsQty= Integer.parseInt(qty[1]);
-            StringBuilder sb = new StringBuilder(testPointsQty);
+            final StringBuilder out = new StringBuilder();
             final Map<Point, Integer> testPointCounts = new LinkedHashMap<>(testPointsQty);
             final Point[] linePoints = new Point[linesQty * 2 + testPointsQty];
 
@@ -125,25 +115,25 @@ public class QuickSort {
             for (int i = 0; i < linesQty; i++) {
 
                 String[] lp = br.readLine().split(" ");
-                linePoints[linePointIndex] = new Point(Integer.parseInt(lp[0]), Side.LEFT);
+                linePoints[linePointIndex] = new Point(Integer.parseInt(lp[0]), Side.LEFT, 0);
                 linePointIndex++;
-                linePoints[linePointIndex] = new Point(Integer.parseInt(lp[1]), Side.RIGHT);
+                linePoints[linePointIndex] = new Point(Integer.parseInt(lp[1]), Side.RIGHT, 0);
                 linePointIndex++;
             }
 
             String[] tp = br.readLine().split(" ");
 
             for (int i = 0; i < testPointsQty; i++) {
-                linePoints[linePointIndex] = new Point(Integer.parseInt(tp[i]), Side.TEST);
+                linePoints[linePointIndex] = new Point(Integer.parseInt(tp[i]), Side.TEST, i);
                 testPointCounts.put(linePoints[linePointIndex], 0);
                 linePointIndex++;
             }
 
             quickSort(linePoints, 0, linePoints.length - 1);
-            search_2(linePoints, testPointCounts);
+            search(linePoints, testPointCounts);
 
-            testPointCounts.forEach((k,v) ->sb.append(v).append(" "));
-            System.out.println(sb.toString());
+            testPointCounts.forEach((k,v) ->out.append(v).append(" "));
+            System.out.println(out.toString());
 
         } catch (IOException e) {
             e.printStackTrace();

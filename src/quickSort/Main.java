@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class QuickSort {
+public class Main {
 
     enum Side {
 
@@ -141,6 +141,6 @@ public class QuickSort {
     }
 
     public static void main(String[] args) {
-        new QuickSort().run();
+        new Main().run();
     }
 }

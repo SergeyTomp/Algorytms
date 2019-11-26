@@ -1,5 +1,7 @@
 package increasingSubsequence;
 
+import java.util.Arrays;
+
 public class LIS {
 
     private int CeilIndex(int A[], int l, int r, int key) {
@@ -18,24 +20,33 @@ public class LIS {
         // Add boundary case, when array size is one
 
         int[] tailTable = new int[size];
+        int[] sequence = new int[size];
         int len; // always points empty slot
 
         tailTable[0] = A[0];
+        sequence[0] = 0;
         len = 1;
         for (int i = 1; i < size; i++) {
-            if (A[i] < tailTable[0])
+            if (A[i] < tailTable[0]) {
                 // new smallest value
                 tailTable[0] = A[i];
-
-            else if (A[i] > tailTable[len - 1])
+                sequence[i] = 0;
+            } else if (A[i] > tailTable[len - 1]) {
                 // A[i] wants to extend largest subsequence
                 tailTable[len++] = A[i];
-
-            else
-                // A[i] wants to be current end candidate of an existing
+                sequence[i] = len;
+            }
+            else{// A[i] wants to be current end candidate of an existing
                 // subsequence. It will replace ceil value in tailTable
-                tailTable[CeilIndex(tailTable, -1, len - 1, A[i])] = A[i];
+                int index = CeilIndex(tailTable, -1, len - 1, A[i]);
+                tailTable[index] = A[i];
+                sequence[i] = index;
+            }
+
         }
+        System.err.println(Arrays.toString(A));
+        System.err.println(Arrays.toString(sequence));
+        System.err.println(Arrays.toString(tailTable));
         return len;
     }
 

@@ -4,65 +4,80 @@ import java.util.Arrays;
 
 public class LIS {
 
-    private int CeilIndex(int A[], int l, int r, int key) {
-        while (r - l > 1) {
-            int m = l + (r - l) / 2;
-            if (A[m] >= key)
-                r = m;
+    private int ceilIndex(int A[], int left, int right, int key) {
+        while (right - left > 1) {
+            int mid = left + (right - left) / 2;
+            if (A[mid] >= key)
+                right = mid;
             else
-                l = m;
+                left = mid;
         }
-        return r;
+        return right;
     }
 
-    private int LongestIncreasingSubsequenceLength(int A[], int size) {
+    private void searchLIS(int array[], int size) {
 
         // Add boundary case, when array size is one
 
         int[] tailTable = new int[size];
         int[] sequence = new int[size];
-        int len; // always points empty slot
+        int len; // всегда указывает на первую свободную ячейку в tailTable
 
-        tailTable[0] = A[0];
+        tailTable[0] = array[0];
         sequence[0] = 0;
         len = 1;
         for (int i = 1; i < size; i++) {
-            if (A[i] < tailTable[0]) {
-                // new smallest value
-                tailTable[0] = A[i];
+            if (array[i] < tailTable[0]) {  // замещает последний член в самом коротком кандидате на LIS.
+                tailTable[0] = array[i];
                 sequence[i] = 0;
-            } else if (A[i] > tailTable[len - 1]) {
-                // A[i] wants to extend largest subsequence
-                tailTable[len++] = A[i];
+            } else if (array[i] > tailTable[len - 1]) { // array[i] увеличивает текущую LIS
                 sequence[i] = len;
+                tailTable[len] = array[i];
+                len++;
             }
-            else{// A[i] wants to be current end candidate of an existing
-                // subsequence. It will replace ceil value in tailTable
-                int index = CeilIndex(tailTable, -1, len - 1, A[i]);
-                tailTable[index] = A[i];
+            else{// array[i] замещает последний член в одном из промежуточных кандидаттов на LIS.
+                int index = ceilIndex(tailTable, -1, len - 1, array[i]);
+                tailTable[index] = array[i];
                 sequence[i] = index;
             }
 
         }
-        System.err.println(Arrays.toString(A));
+        System.err.println(Arrays.toString(array));
         System.err.println(Arrays.toString(sequence));
         System.err.println(Arrays.toString(tailTable));
         StringBuilder sb = new StringBuilder(size);
-        for (int prev = len; prev >= 0; prev--) {
-            sb.append(A[CeilIndex(sequence, -1, sequence.length - 1, prev)]).append(" ");
+
+        int prev_a = -1;
+        int prev_s = len - 1;
+        int tail_i = 0;
+        for (int i = array.length - 1; i >= 0; i--) {
+
+            if (prev_a == -1 && sequence[i] == prev_s) {
+                prev_a = array[i];
+                tailTable[tail_i] = prev_a;
+                tail_i++;
+            } else if (sequence[i] == prev_s - 1 && array[i] < prev_a) {
+                prev_a = array[i];
+                prev_s = sequence[i];
+                tailTable[tail_i] = prev_a;
+                tail_i++;
+            }
         }
+        Arrays.stream(tailTable).filter(e -> e != 0).sorted().forEach(e -> sb.append(e).append(" "));
+        System.err.println(len);
         System.err.println(sb.toString());
-        return len;
     }
 
-    private void run(int A[], int size) {
-        System.out.println("Length of Longest Increasing Subsequence is " + LongestIncreasingSubsequenceLength(A, size));
+    private void run(int array[], int size) {
+        searchLIS(array, size);
     }
 
     public static void main(String[] args) {
-        int A[] = { 2, 5, 3, 7, 11, 8, 10, 13, 6 };
-        int n = A.length;
-        new LIS().run(A, n);
+        int array[] = { 2, 5, 3, 7, 11, 8, 10, 13, 6 };
+//        int A[] = { 5, 10, 6, 12, 3, 24, 7, 8};
+//        int A[] = { 4, 4, 4, 4, 4, 4, 4, 4};
+        int n = array.length;
+        new LIS().run(array, n);
     }
 }
 

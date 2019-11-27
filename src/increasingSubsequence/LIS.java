@@ -47,6 +47,11 @@ public class LIS {
         System.err.println(Arrays.toString(A));
         System.err.println(Arrays.toString(sequence));
         System.err.println(Arrays.toString(tailTable));
+        StringBuilder sb = new StringBuilder(size);
+        for (int prev = len; prev >= 0; prev--) {
+            sb.append(A[CeilIndex(sequence, -1, sequence.length - 1, prev)]).append(" ");
+        }
+        System.err.println(sb.toString());
         return len;
     }
 

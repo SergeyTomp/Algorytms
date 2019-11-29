@@ -2,7 +2,7 @@ package increasingSubsequence;
 
 import java.util.Arrays;
 
-public class LMS {
+public class LMIS {
 
     private void searchLMS(int array[], int size) {
 
@@ -62,6 +62,6 @@ public class LMS {
 //        int array[] = { 10, 9, 8, 7, 6, 5, 4, 20};
 //        int array[] = { 3, 6, 7, 12};
         int n = array.length;
-        new LMS().run(array, n);
+        new LMIS().run(array, n);
     }
 }

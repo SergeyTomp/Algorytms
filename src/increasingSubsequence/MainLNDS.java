@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 import java.util.stream.IntStream;
 
-public class Main {
+public class MainLNDS {
 
     private class FastScanner {
 
@@ -34,8 +34,8 @@ public class Main {
 
     private void searchLNDS(int[] array, int size) {
 
-        int tailTable[] = new int[size];
-        int prevIndex[] = new int[size];
+        int[] tailTable = new int[size];
+        int[] prevIndex = new int[size];
         int max = 0;
         for(int i = 0; i < size; i++) {
             int el = array[i];
@@ -43,10 +43,15 @@ public class Main {
             if(idx < 0) {
                 idx = -(idx + 1);
             }
-            if(tailTable[idx] == el) { // duplicate found, let's find the last one
+            if(tailTable[idx] == el) {
                 idx = Arrays.binarySearch(tailTable, 0, max, el + 1);
-                if(idx < 0) {
+                if (idx < 0) {
                     idx = -(idx + 1);
+                } else {
+                    while (tailTable[idx] != el) {
+                        idx --;
+                    }
+                    idx ++;
                 }
             }
             tailTable[idx] = el;
@@ -56,18 +61,21 @@ public class Main {
             }
         }
 
-        StringBuilder sb = new StringBuilder(max);
-        System.out.println(max);
+        PrintWriter pr = new PrintWriter(new OutputStreamWriter(System.out));
+        pr.write(String.valueOf(max));
+        pr.write("\n");
 
         int prev_i = max - 1;
         for (int i = size - 1; i >= 0; i--) {
 
             if (prevIndex[i] == prev_i) {
-                sb.append(Math.abs(i - size)).append(" ");
+                pr.write(String.valueOf(size - i));
+                pr.write(" ");
                 prev_i --;
             }
         }
-        System.out.println(sb.toString());
+        pr.flush();
+        pr.close();
     }
 
     private void run() {
@@ -75,7 +83,7 @@ public class Main {
         FastScanner fs = new FastScanner();
 
         int size = fs.nextInt();
-        int array[] = new int[size];
+        int[] array = new int[size];
         int n = size - 1;
         IntStream.rangeClosed(0, size - 1).map(i -> n - i).forEach(i -> array[i] = fs.nextInt());
 
@@ -84,6 +92,6 @@ public class Main {
 
     public static void main(String[] args) {
 
-        new Main().run();
+        new MainLNDS().run();
     }
 }

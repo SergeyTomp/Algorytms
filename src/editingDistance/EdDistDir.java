@@ -11,7 +11,7 @@ public class EdDistDir {
         private StringTokenizer st;
 
         FastScanner() throws FileNotFoundException {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(new File("src/input.txt"))));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(new File("src/editingDistance/input.txt"))));
         }
 
         private String next() {

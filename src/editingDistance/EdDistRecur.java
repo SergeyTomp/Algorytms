@@ -7,9 +7,9 @@ import java.util.StringTokenizer;
 public class EdDistRecur {
 
 
-    String string1;
-    String string2;
-    int[][] prev;
+    private String string1;
+    private String string2;
+    private int[][] prev;
 
     private class FastScanner {
 
@@ -17,7 +17,7 @@ public class EdDistRecur {
         private StringTokenizer st;
 
         FastScanner() throws FileNotFoundException {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(new File("src/input.txt"))));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(new File("src/editingDistance/input.txt"))));
         }
 
         private String next() {

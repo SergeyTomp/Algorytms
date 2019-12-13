@@ -67,9 +67,12 @@ public class Calc {
         System.out.println(oper[n]);
 
         // вспомогательный вывод массива prev для понимания восстановления решения
-        System.err.println(Arrays.toString(prev));
+//        System.err.println(Arrays.toString(prev));
 
         //восстанавливаем ход операций
+        StringBuilder out = new StringBuilder();
+
+        //по массиву истории
         List<Integer> result = new ArrayList<>();
         result.add(n);
 
@@ -77,10 +80,26 @@ public class Calc {
             result.add(prev[n]);
             n = prev[n];
         }
+        result.stream().sorted().forEach(i -> out.append(i).append(" "));
+
+        // без массива истории, но с повторной арифметикой
+//        int k = oper[n];
+//        int[]hist = new int[k + 1];
+//        while (n > 0) {
+//            hist[k] = n;
+//            k--;
+//            if (n % 3 == 0 && oper[n / 3] == k) {
+//                n /= 3;
+//                continue;
+//            } else if (n % 2 == 0 && oper[n / 2] == k) {
+//                n /= 2;
+//                continue;
+//            }
+//            n--;
+//        }
+//        Arrays.stream(hist).forEach(a -> out.append(a).append(" "));
 
         // вывод
-        StringBuilder out = new StringBuilder();
-        result.stream().sorted().forEach(i -> out.append(i).append(" "));
         System.out.println(out.toString());
     }
 

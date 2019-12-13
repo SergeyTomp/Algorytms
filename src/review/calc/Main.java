@@ -1,16 +1,19 @@
 package review.calc;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
-public class Calc {
+public class Main {
+
     private class FastScanner {
 
         private BufferedReader br;
         private StringTokenizer st;
 
-        FastScanner() throws FileNotFoundException {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(new File("src/review/calc/input.txt"))));
+        FastScanner(){
+            br = new BufferedReader(new InputStreamReader(System.in));
         }
 
         private String next() {
@@ -28,12 +31,11 @@ public class Calc {
         }
     }
     private void calculate(int n) {
-
         /*
-        * массив оптимального количества действий для каждого последующего числа, начиная с 2 до заданного
-        * размер массива на единицу больше, чтобы удобнее использовать индекс, как само число
-        * индекс наибольшего числа в массиве даст самое дорогое по количеству операций число в пределах заданного
-        */
+         * массив оптимального количества действий для каждого последующего числа, начиная с 2 и до заданного
+         * размер массива на единицу больше, чтобы удобнее использовать индекс, как само число
+         * индекс наибольшего числа в массиве даст самое дорогое по количеству операций число в пределах заданного, если оно интересует
+         */
         int[]oper = new int[n + 1];
         oper[0] = -1;
 
@@ -62,12 +64,8 @@ public class Calc {
                 prev[i] = i - 1;
             }
         }
-
         // выводим количество операций
         System.out.println(oper[n]);
-
-        // вспомогательный вывод массива prev для понимания восстановления решения
-        System.err.println(Arrays.toString(prev));
 
         //восстанавливаем ход операций
         List<Integer> result = new ArrayList<>();
@@ -84,12 +82,12 @@ public class Calc {
         System.out.println(out.toString());
     }
 
-    private void run() throws FileNotFoundException {
+    private void run(){
         FastScanner fs = new FastScanner();
         calculate(fs.nextInt());
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
-        new Calc().run();
+    public static void main(String[] args){
+        new Main().run();
     }
 }
